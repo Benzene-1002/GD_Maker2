@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>GD検索</title>
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    label {
+      margin: 0 10px;
+      font-size: 1rem;
+    }
+
+    select {
+      padding: 6px 10px;
+      font-size: 1rem;
+      margin-left: 5px;
+    }
+
+    .gacha-wrapper {
+      position: relative;
+      width: 300px;
+      margin: 40px auto 20px;
+    }
+
+    .gacha-face {
+      width: 100%;
+    }
+
+    .card {
+      position: absolute;
+      top: 55%; /* 口の位置に合わせて微調整 */
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%) scale(0);
+      background: #fff;
+      padding: 20px;
+      width: 180px;
+      border-radius: 12px;
+      font-size: 18px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      border: 2px solid #ccc;
+      transition: transform 0.4s ease;
+      z-index: 10;
+    }
+
+    .card.show {
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #ff4081;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e73370;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>GDガチャを回そう！</h1>
+
+  <div>
+    <label>カテゴリ:
+      <select id="category">
+        <option value="">--</option>
+        <option value="課題解決">課題解決</option>
+        <option value="抽象">抽象</option>
+        <option value="その他">その他</option>
+        <!-- 必要に応じて項目追加 -->
+      </select>
+    </label>
+
+    <label>レベル:
+      <select id="level">
+        <option value="">--</option>
+        <option value="初級">初級</option>
+        <option value="中級">中級</option>
+        <option value="上級">上級</option>
+        <!-- 必要に応じて項目追加 -->
+      </select>
+    </label>
+  </div>
+
+  <div class="gacha-wrapper">
+    <!-- 口の位置が中央下にくるよう画像を準備 -->
+    <img src="taro_gacha.png" class="gacha-face" alt="ガチャキャラ">
+    <div id="card" class="card">ここに結果が出るよ！</div>
+  </div>
+
+  <button onclick="spinGacha()">ガチャを回す！</button>
+
+  <script>
+    async function spinGacha() {
+      const category = document.getElementById("category").value;
+      const level = document.getElementById("level").value;
+      const card = document.getElementById("card");
+
+      const url = `https://script.google.com/macros/s/AKfycbyA47E7oh9XYLwkuCx0IZg7FZp1v9nzGgZn__7EqAXOv3Yw4cf8XqJHYHzxgrIJx71w/exec?category=${encodeURIComponent(category)}&level=${encodeURIComponent(level)}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data && data.name) {
+          card.textContent = `🎯 ${data.name}（${data.category}・${data.level}）`;
+        } else {
+          card.textContent = "該当データが見つかりませんでした…";
+        }
+
+        card.classList.remove("show");
+        void card.offsetWidth;
+        card.classList.add("show");
+
+      } catch (e) {
+        card.textContent = "エラーが発生しました。";
+        console.error(e);
+      }
+    }
+  </script>
+
+</body>
+</html>
