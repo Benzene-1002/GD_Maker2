@@ -118,7 +118,7 @@
         const data = await res.json();
 
         if (data && data.name) {
-          card.textContent = `🎯 ${data.name}`;
+          card.textContent = `${data.name}`;
         } else {
           card.textContent = "該当データが見つかりませんでした…";
         }
