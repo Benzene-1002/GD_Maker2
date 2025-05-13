@@ -39,7 +39,7 @@
 
     .card {
       position: absolute;
-      top: 55%; /* 口の位置に合わせて微調整 */
+      top: 55%;
       left: 50%;
       transform: translateX(-50%) translateY(-50%) scale(0);
       background: #fff;
@@ -85,7 +85,6 @@
         <option value="課題解決">課題解決</option>
         <option value="抽象">抽象</option>
         <option value="その他">その他</option>
-        <!-- 必要に応じて項目追加 -->
       </select>
     </label>
 
@@ -95,13 +94,11 @@
         <option value="初級">初級</option>
         <option value="中級">中級</option>
         <option value="上級">上級</option>
-        <!-- 必要に応じて項目追加 -->
       </select>
     </label>
   </div>
 
   <div class="gacha-wrapper">
-    <!-- 口の位置が中央下にくるよう画像を準備 -->
     <img src="taro_gacha.png" class="gacha-face" alt="ガチャキャラ">
     <div id="card" class="card">ここに結果が出るよ！</div>
   </div>
@@ -114,14 +111,14 @@
       const level = document.getElementById("level").value;
       const card = document.getElementById("card");
 
-      const url = `https://script.google.com/macros/s/AKfycbyA47E7oh9XYLwkuCx0IZg7FZp1v9nzGgZn__7EqAXOv3Yw4cf8XqJHYHzxgrIJx71w/exec?category=${encodeURIComponent(category)}&level=${encodeURIComponent(level)}`;
+      const url = `https://script.google.com/macros/s/AKfycbYOUR_SCRIPT_ID/exec?category=${encodeURIComponent(category)}&level=${encodeURIComponent(level)}`;
 
       try {
         const res = await fetch(url);
         const data = await res.json();
 
         if (data && data.name) {
-          card.textContent = `🎯 ${data.name}（${data.category}・${data.level}）`;
+          card.textContent = `🎯 ${data.name}`;
         } else {
           card.textContent = "該当データが見つかりませんでした…";
         }
@@ -129,7 +126,6 @@
         card.classList.remove("show");
         void card.offsetWidth;
         card.classList.add("show");
-
       } catch (e) {
         card.textContent = "エラーが発生しました。";
         console.error(e);
