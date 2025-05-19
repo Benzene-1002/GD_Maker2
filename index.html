@@ -74,6 +74,21 @@
     button:hover {
       background: #e73370;
     }
+
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #ff4081;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -107,11 +122,33 @@
 
   <button onclick="spinGacha()">ガチャを回す！</button>
 
+  <div id="spinner" style="display: none; margin-top: 16px;">
+    <div class="loader"></div>
+  </div>
+
+
   <script>
     async function spinGacha() {
       const category = document.getElementById("category").value;
       const level = document.getElementById("level").value;
       const card = document.getElementById("card");
+      const button = document.querySelector("button");
+      const spinner = document.getElementById("spinner");
+
+      // 入力チェック
+      if (!category || !level) {
+        alert("カテゴリとレベルを選んでください！");
+        return;
+      }
+
+      // ガチャ中のUI更新
+      button.disabled = true;
+      button.textContent = "回転中…";
+      spinner.style.display = "block";
+      card.textContent = "ガチャ回転中…";
+      card.classList.remove("show");
+      void card.offsetWidth;
+      card.classList.add("show");
 
       const url = `https://script.google.com/macros/s/AKfycbyzF05UVnAOBswuXb2GsX2bLIObTK_iUF4TR17l8RBQeyDdsU72V5qQwTeC-73--nV5/exec?category=${encodeURIComponent(category)}&level=${encodeURIComponent(level)}`;
 
@@ -124,13 +161,17 @@
         } else {
           card.textContent = "該当データが見つかりませんでした…";
         }
-
-        card.classList.remove("show");
-        void card.offsetWidth;
-        card.classList.add("show");
       } catch (e) {
         card.textContent = "エラーが発生しました。";
         console.error(e);
+      } finally {
+        // ガチャ終了後のUIリセット
+        spinner.style.display = "none";
+        button.disabled = false;
+        button.textContent = "ガチャを回す！";
+        card.classList.remove("show");
+        void card.offsetWidth;
+        card.classList.add("show");
       }
     }
   </script>
