@@ -126,6 +126,8 @@
     <div class="loader"></div>
   </div>
 
+  <h2 style="margin-top: 40px;">過去の結果</h2>
+  <ul id="history" style="list-style: none; padding: 0;"></ul>
 
   <script>
     async function spinGacha() {
@@ -158,6 +160,12 @@
 
         if (data && data.name) {
           card.textContent = `${data.name}`;
+          const history = document.getElementById("history");
+          const li = document.createElement("li");
+          li.textContent = data.name;
+          li.style.padding = "6px 0";
+          li.style.borderBottom = "1px solid #ddd";
+          history.prepend(li); // 最新を一番上に
         } else {
           card.textContent = "該当データが見つかりませんでした…";
         }
